@@ -26,10 +26,23 @@ struct AlbumView: View {
                     }
                 }
             }
-            ProgressView()
-                .progressViewStyle(.circular)
-            onAppear {
-                viewModel.loadMore()
+            switch viewModel.state{
+            case .good:
+                Color.clear
+                    .onAppear{
+                        viewModel.loadMore()
+                    }
+            case .isLoading:
+                ProgressView("Loading Albums...")
+                    .progressViewStyle(.circular)
+                    .frame(maxWidth: .infinity)
+            case .loadedAll:
+                EmptyView()
+            case .noResults:
+                Text("Sorry Could not find anything.")
+                    .foregroundColor(.gray)
+            case .error(let error):
+                Text("\(error)")
             }
         }
         .searchable(text: $viewModel.searchItem)

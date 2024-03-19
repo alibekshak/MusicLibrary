@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+enum State: Comparable {
+    case good
+    case isLoading
+    case loadedAll
+    case noResults
+    case error(String)
+}
