@@ -8,6 +8,11 @@
 import Foundation
 import Combine
 
+enum EntityType: String {
+    case album
+    case song
+}
+
 class AlbumViewModel: ObservableObject {
     
     @Published var searchItem: String = ""
@@ -41,37 +46,63 @@ class AlbumViewModel: ObservableObject {
         
         guard state == State.good else { return }
         
-        let offset = page * limit
-        
-        guard let url = URL(string: "https://itunes.apple.com/search?term=\(searchItem)&entity=album&limit=\(limit)&offset=\(offset)") else { return }
-        
         state = .isLoading
+        let url = creatURL(for: searchItem)
         
-        URLSession.shared.dataTask(with: url) { [weak self] date, response, error in
-            if let error = error {
-                print("Error: \(error.localizedDescription)")
-                DispatchQueue.main.async {
+        fetch(type: AlbumResponse.self, url: url) { [weak self]  result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let results):
+                    for album in results.results {
+                        self?.albums.append(album)
+                    }
+                    self?.page += 1
+                    self?.state = (results.results.count == self?.limit) ? .good : .loadedAll
+                case .failure(let error):
                     self?.state = .error("Can't load: \(error.localizedDescription)")
                 }
+            }
+        }
+    }
+    
+    func fetch<T: Decodable>(type: T.Type, url: URL?, completion: @escaping (Result<T, APIError>) -> Void) {
+        
+        guard let url = url else {
+            let error = APIError.badURL
+            completion(Result.failure(error))
+            return
+        }
+        
+        URLSession.shared.dataTask(with: url) { date, response, error in
+            if let error = error as? URLError {
+                completion(Result.failure(APIError.urlSession(error)))
+            } else if let response = response as? HTTPURLResponse, !(200...299).contains(response.statusCode) {
+                completion(Result.failure(APIError.badResponse(response.statusCode)))
             } else if let date = date {
                 
                 do {
-                    let result = try JSONDecoder().decode(AlbumResponse.self, from: date)
-                    DispatchQueue.main.async {
-                        for album in result.results {
-                            self?.albums.append(album)
-                        }
-                        self?.page += 1
-                        self?.state = (result.results.count == self?.limit) ? .good : .loadedAll
-                    }
-                    
+                    let result = try JSONDecoder().decode(type, from: date)
+                    completion(Result.success(result))
                 } catch {
-                    print("Error: \(error.localizedDescription)")
-                    DispatchQueue.main.async {
-                        self?.state = .error("Can't get date: \(error.localizedDescription)")
-                    }
+                    completion(Result.failure(.decoding(error as? DecodingError)))
                 }
             }
         }.resume()
+    }
+    
+    func creatURL(for searchItem: String, type: EntityType = .album) -> URL? {
+        let baseURL = "https://itunes.apple.com/search"
+        let offset = page * limit
+        
+        let queryItem = [URLQueryItem(name: "term", value: searchItem),
+                         URLQueryItem(name: "entity", value: type.rawValue),
+                         URLQueryItem(name: "limit", value: String(limit)),
+                         URLQueryItem(name: "offset", value: String(offset)),
+        ]
+
+        
+        var component = URLComponents(string: baseURL)
+        component?.queryItems = queryItem
+        return component?.url
     }
 }
