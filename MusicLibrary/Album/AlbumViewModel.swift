@@ -25,7 +25,10 @@ class AlbumViewModel: ObservableObject {
     
     var bag = Set<AnyCancellable>()
     
-    init() {
+    let service:  APIService
+    
+    init(service: APIService) {
+        self.service = service
         $searchItem
             .dropFirst()
             .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
@@ -47,9 +50,8 @@ class AlbumViewModel: ObservableObject {
         guard state == State.good else { return }
         
         state = .isLoading
-        let url = creatURL(for: searchItem)
         
-        fetch(type: AlbumResponse.self, url: url) { [weak self]  result in
+        service.fetchAlbum(searchItem: searchItem, page: page, limit: limit) { [weak self]  result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let results):
@@ -59,50 +61,9 @@ class AlbumViewModel: ObservableObject {
                     self?.page += 1
                     self?.state = (results.results.count == self?.limit) ? .good : .loadedAll
                 case .failure(let error):
-                    self?.state = .error("Can't load: \(error.localizedDescription)")
+                    self?.state = .error("Couldn't load: \(error.localizedDescription)")
                 }
             }
         }
-    }
-    
-    func fetch<T: Decodable>(type: T.Type, url: URL?, completion: @escaping (Result<T, APIError>) -> Void) {
-        
-        guard let url = url else {
-            let error = APIError.badURL
-            completion(Result.failure(error))
-            return
-        }
-        
-        URLSession.shared.dataTask(with: url) { date, response, error in
-            if let error = error as? URLError {
-                completion(Result.failure(APIError.urlSession(error)))
-            } else if let response = response as? HTTPURLResponse, !(200...299).contains(response.statusCode) {
-                completion(Result.failure(APIError.badResponse(response.statusCode)))
-            } else if let date = date {
-                
-                do {
-                    let result = try JSONDecoder().decode(type, from: date)
-                    completion(Result.success(result))
-                } catch {
-                    completion(Result.failure(.decoding(error as? DecodingError)))
-                }
-            }
-        }.resume()
-    }
-    
-    func creatURL(for searchItem: String, type: EntityType = .album) -> URL? {
-        let baseURL = "https://itunes.apple.com/search"
-        let offset = page * limit
-        
-        let queryItem = [URLQueryItem(name: "term", value: searchItem),
-                         URLQueryItem(name: "entity", value: type.rawValue),
-                         URLQueryItem(name: "limit", value: String(limit)),
-                         URLQueryItem(name: "offset", value: String(offset)),
-        ]
-
-        
-        var component = URLComponents(string: baseURL)
-        component?.queryItems = queryItem
-        return component?.url
     }
 }

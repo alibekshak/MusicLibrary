@@ -23,7 +23,7 @@ class AppCoordinator {
     }
     
     private func albumScreen() -> UIViewController {
-        let viewModel = AlbumViewModel()
+        let viewModel = AlbumViewModel(service: APIService())
         let controller = UIHostingController(rootView: AlbumView(viewModel: viewModel))
         
         let nc = UINavigationController(rootViewController: controller)
