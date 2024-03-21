@@ -42,7 +42,7 @@ struct AlbumView: View {
         List {
             ForEach(viewModel.albums, id: \.id) { album in
                 HStack {
-                    imageView(urlString: album.artworkUrl100, size: 100)
+                    ImageLoadingView(urlString: album.artworkUrl100, size: 100)
                     VStack(alignment: .leading) {
                         Text(album.collectionName)
                             .lineLimit(2)
@@ -53,7 +53,7 @@ struct AlbumView: View {
                     }
                 }
                 .onTapGesture {
-                    
+                    viewModel.showAlbumSongs(songID: album.id)
                 }
             }
             
@@ -78,24 +78,5 @@ struct AlbumView: View {
             }
         }
         .listStyle(.plain)
-    }
-    
-    func imageView(urlString: String, size: CGFloat) -> some View {
-        AsyncImage(url: URL(string: urlString)) { phase in
-            switch phase {
-                case .empty:
-                    ProgressView()
-                        .frame(width: size)
-                case .failure(_):
-                    Color.gray
-                        .frame(width: size)
-                case .success(let image):
-                    image
-                        .border(Color(white: 0.8))
-                default:
-                    EmptyView()
-            }
-        }
-        .frame(height: size)
     }
 }

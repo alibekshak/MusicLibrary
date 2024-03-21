@@ -12,6 +12,11 @@ import Combine
 
 class AlbumViewModel: ObservableObject {
     
+    enum Event {
+        case song(Int)
+    }
+    var onEvent: ((Event) -> Void)?
+    
     @Published var searchItem: String = ""
     @Published var albums: [Album] = [Album]()
     @Published var state: FetchState = .good
@@ -63,5 +68,9 @@ class AlbumViewModel: ObservableObject {
                 }
             }
         }
+    }
+    
+    func showAlbumSongs(songID: Int) {
+        onEvent?(.song(songID))
     }
 }
