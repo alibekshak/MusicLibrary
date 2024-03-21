@@ -11,15 +11,31 @@ struct AlbumView: View {
     
     @StateObject var viewModel: AlbumViewModel
     
+    @State private var selectedEntityType = EntityType.album
+    
     var body: some View {
-        Group {
-            if viewModel.searchItem.isEmpty {
-                PlaceholderView(searchTerm: $viewModel.searchItem)
-            } else {
-                albums
+        VStack {
+            picker
+            Group {
+                if viewModel.searchItem.isEmpty {
+                    PlaceholderView(searchTerm: $viewModel.searchItem)
+                } else {
+                    albums
+                }
             }
         }
         .searchable(text: $viewModel.searchItem)
+    }
+    
+    var picker: some View {
+        Picker("Select", selection: $selectedEntityType) {
+            ForEach(EntityType.allCases) { type in
+                Text(type.name())
+                    .tag(type)
+            }
+        }
+        .pickerStyle(.segmented)
+        .padding(.horizontal)
     }
     
     var albums: some View {
@@ -61,7 +77,7 @@ struct AlbumView: View {
                 Text("\(error)")
             }
         }
-        .listStyle(.grouped)
+        .listStyle(.plain)
     }
     
     func imageView(urlString: String, size: CGFloat) -> some View {

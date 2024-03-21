@@ -26,8 +26,6 @@ struct PlaceholderView: View {
     
     var body: some View {
         VStack(spacing: 15){
-            Text("Choose your artist")
-                .font(.title)
             List {
                 ForEach(suggestion, id: \.self){ artist in
                     Button{
