@@ -13,7 +13,7 @@ struct AlbumView: View {
     
     var body: some View {
         Group {
-            if viewModel.searchItem.isEmpty{
+            if viewModel.searchItem.isEmpty {
                 PlaceholderView(searchTerm: $viewModel.searchItem)
             } else {
                 albums
