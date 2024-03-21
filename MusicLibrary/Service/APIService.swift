@@ -43,19 +43,24 @@ class APIService {
         }.resume()
     }
     
-    func creatURL(for searchItem: String, type: EntityType, page: Int, limit: Int) -> URL? {
+    func creatURL(for searchItem: String, type: EntityType, page: Int?, limit: Int?) -> URL? {
         let baseURL = "https://itunes.apple.com/search"
-        let offset = page * limit
         
-        let queryItem = [URLQueryItem(name: "term", value: searchItem),
+        var queryItems = [URLQueryItem(name: "term", value: searchItem),
                          URLQueryItem(name: "entity", value: type.rawValue),
-                         URLQueryItem(name: "limit", value: String(limit)),
-                         URLQueryItem(name: "offset", value: String(offset)),
         ]
+        
+        if let page = page, let limit = limit {
+            let offset = page * limit
+            queryItems.append(URLQueryItem(name: "limit", value: String(limit)))
+            queryItems.append(URLQueryItem(name: "offset", value: String(offset)))
+        }
 
         
         var component = URLComponents(string: baseURL)
-        component?.queryItems = queryItem
+        component?.queryItems = queryItems
         return component?.url
     }
+    
+    
 }

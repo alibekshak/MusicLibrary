@@ -12,7 +12,7 @@ class SongViewModel: ObservableObject {
     @Published var songs: [Song] = [Song]()
     @Published var searchItem: String = ""
     
-    @Published var state: State = .good
+    @Published var state: FetchState = .good
     
     let limit: Int = 20
     var page: Int = 0
@@ -23,7 +23,7 @@ class SongViewModel: ObservableObject {
         
         guard !searchItem.isEmpty else { return }
         
-        guard state == State.good else { return }
+        guard state == FetchState.good else { return }
         
         state = .isLoading
         

@@ -12,6 +12,17 @@ struct AlbumView: View {
     @StateObject var viewModel: AlbumViewModel
     
     var body: some View {
+        Group {
+            if viewModel.searchItem.isEmpty{
+                PlaceholderView(searchTerm: $viewModel.searchItem)
+            } else {
+                albums
+            }
+        }
+        .searchable(text: $viewModel.searchItem)
+    }
+    
+    var albums: some View {
         List {
             ForEach(viewModel.albums, id: \.id) { album in
                 HStack {
@@ -25,7 +36,11 @@ struct AlbumView: View {
                             .lineLimit(2)
                     }
                 }
+                .onTapGesture {
+                    
+                }
             }
+            
             switch viewModel.state{
             case .good:
                 Color.clear
@@ -33,23 +48,38 @@ struct AlbumView: View {
                         viewModel.loadMore()
                     }
             case .isLoading:
-                ProgressView()
+                ProgressView("Loading Albums...")
                     .progressViewStyle(.circular)
                     .frame(maxWidth: .infinity)
+                    
             case .loadedAll:
                 EmptyView()
             case .noResults:
-                Text("Sorry Could not find anything.")
+                Text("Could not find anything")
                     .foregroundColor(.gray)
             case .error(let error):
                 Text("\(error)")
             }
         }
-        .searchable(text: $viewModel.searchItem)
+        .listStyle(.grouped)
     }
     
     func imageView(urlString: String, size: CGFloat) -> some View {
-        AsyncImage(url: URL(string: urlString))
-            .frame(height: size)
+        AsyncImage(url: URL(string: urlString)) { phase in
+            switch phase {
+                case .empty:
+                    ProgressView()
+                        .frame(width: size)
+                case .failure(_):
+                    Color.gray
+                        .frame(width: size)
+                case .success(let image):
+                    image
+                        .border(Color(white: 0.8))
+                default:
+                    EmptyView()
+            }
+        }
+        .frame(height: size)
     }
 }

@@ -8,24 +8,22 @@
 import Foundation
 import Combine
 
-enum EntityType: String {
-    case album
-    case song
-}
+// https://itunes.apple.com/search?term=jack+johnson&entity=album&limit=5&offset=10
 
 class AlbumViewModel: ObservableObject {
     
     @Published var searchItem: String = ""
     @Published var albums: [Album] = [Album]()
-    
-    @Published var state: State = .good 
+    @Published var state: FetchState = .good
     
     let limit: Int = 20
     var page: Int = 0
     
+    let service:  APIService
+    
     var bag = Set<AnyCancellable>()
     
-    let service:  APIService
+
     
     init(service: APIService) {
         self.service = service
@@ -47,19 +45,19 @@ class AlbumViewModel: ObservableObject {
         
         guard !searchItem.isEmpty else { return }
         
-        guard state == State.good else { return }
+        guard state == FetchState.good else { return }
         
         state = .isLoading
         
         service.fetchAlbum(searchItem: searchItem, page: page, limit: limit) { [weak self]  result in
             DispatchQueue.main.async {
                 switch result {
-                case .success(let results):
-                    for album in results.results {
+                case .success(let result):
+                    for album in result.results {
                         self?.albums.append(album)
                     }
                     self?.page += 1
-                    self?.state = (results.results.count == self?.limit) ? .good : .loadedAll
+                    self?.state = (result.results.count == self?.limit) ? .good : .loadedAll
                 case .failure(let error):
                     self?.state = .error("Couldn't load: \(error.localizedDescription)")
                 }
