@@ -23,6 +23,7 @@ class SongForAlbumViewModel: ObservableObject{
         self.albumID = albumID
         self.service = service
         print("init for songs in album \(albumID)")
+        self.fetch()
     }
     
     func fetch() {

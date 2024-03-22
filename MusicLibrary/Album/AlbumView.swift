@@ -57,7 +57,7 @@ struct AlbumView: View {
                 }
             }
             
-            switch viewModel.state{
+            switch viewModel.state {
             case .good:
                 Color.clear
                     .onAppear{

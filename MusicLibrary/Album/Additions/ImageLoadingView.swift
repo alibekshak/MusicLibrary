@@ -30,5 +30,6 @@ struct ImageLoadingView: View {
             }
         }
         .frame(height: size)
+        .cornerRadius(12)
     }
 }

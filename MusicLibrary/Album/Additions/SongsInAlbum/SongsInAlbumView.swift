@@ -25,9 +25,6 @@ struct SongsInAlbumView: View {
                 }
             }
         }
-        .onAppear {
-            songsViewModel.fetch()
-        }
     }
     
     var navigationBar: some View {
@@ -39,7 +36,12 @@ struct SongsInAlbumView: View {
                     Image(systemName: "chevron.left")
                     Text("Back")
                 }
-                .font(.title3)
+                .font(.system(
+                    size: 18,
+                    weight: .medium,
+                    design: .rounded
+                    )
+                )
                 .foregroundColor(Color(.label))
             }
             Spacer()
@@ -48,14 +50,15 @@ struct SongsInAlbumView: View {
                     .system(
                         size: 24,
                         weight: .bold,
-                        design: .serif
+                        design: .rounded
                     )
                 )
+                .padding(.leading)
             Spacer()
             Spacer()
         }
         .padding(.top, 12)
-        .padding(.horizontal, 24)
+        .padding(.horizontal, 18)
         .padding(.bottom, 8)
     }
     
@@ -63,14 +66,12 @@ struct SongsInAlbumView: View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 10) {
                 ForEach(songsViewModel.songs) { song in
-                    HStack(spacing: 10){
+                    HStack(spacing: 12) {
                         Text("\(song.trackNumber)")
                             .font(.footnote)
                             .frame(width: 25, alignment: .trailing)
                             .foregroundColor(.black)
-                        
                         ImageLoadingView(urlString: song.artworkUrl60, size: 60)
-                        
                         VStack(alignment: .leading){
                             Text("\(song.country)")
                                 .font(.footnote)
@@ -85,10 +86,12 @@ struct SongsInAlbumView: View {
                         }
                         .lineLimit(1)
                     }
+                    .padding(.trailing)
                     .id(song.trackNumber)
                     Divider()
                 }
             }
+            
         }
     }
 }

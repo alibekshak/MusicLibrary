@@ -90,11 +90,19 @@
 		186EEE522BAC93AE007A6F5F /* Additions */ = {
 			isa = PBXGroup;
 			children = (
-				186EEE532BAC93E9007A6F5F /* SongsInAlbumView.swift */,
-				186EEE572BAC9A4D007A6F5F /* SongForAlbumViewModel.swift */,
+				186EEE592BAD2EC1007A6F5F /* SongsInAlbum */,
 				186EEE552BAC953A007A6F5F /* ImageLoadingView.swift */,
 			);
 			path = Additions;
+			sourceTree = "<group>";
+		};
+		186EEE592BAD2EC1007A6F5F /* SongsInAlbum */ = {
+			isa = PBXGroup;
+			children = (
+				186EEE532BAC93E9007A6F5F /* SongsInAlbumView.swift */,
+				186EEE572BAC9A4D007A6F5F /* SongForAlbumViewModel.swift */,
+			);
+			path = SongsInAlbum;
 			sourceTree = "<group>";
 		};
 		18A906D02BA9DF9F00E6AE1B = {
