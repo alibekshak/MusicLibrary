@@ -15,12 +15,16 @@ struct AlbumView: View {
     
     var body: some View {
         VStack {
-            picker
             Group {
                 if viewModel.searchItem.isEmpty {
                     PlaceholderView(searchTerm: $viewModel.searchItem)
                 } else {
-                    albums
+                    picker
+                    if selectedEntityType == .album{
+                        albums
+                    } else {
+                        song
+                    }
                 }
             }
         }
@@ -61,7 +65,7 @@ struct AlbumView: View {
             case .good:
                 Color.clear
                     .onAppear{
-                        viewModel.loadMore()
+                        viewModel.loadMoreAlbum()
                     }
             case .isLoading:
                 ProgressView("Loading Albums...")
@@ -76,6 +80,50 @@ struct AlbumView: View {
             case .error(let error):
                 Text("\(error)")
             }
+        }
+        .listStyle(.plain)
+    }
+    
+    var song: some View {
+        List {
+            ForEach(viewModel.songs){ song in
+                    HStack{
+                        ImageLoadingView(urlString: song.artworkUrl60, size: 60)
+                        VStack(alignment: .leading){
+                            if song.trackName.count > 15{
+                                Text(song.trackName.prefix(15) + "...")
+                                    .font(.headline)
+                                    .truncationMode(.tail)
+                            }else{
+                                Text(song.trackName)
+                                    .font(.headline)
+                            }
+                            Text(song.artistName)
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
+                        .padding()
+                    }
+            }
+            switch viewModel.state {
+                case .good:
+                    Color.clear
+                        .onAppear {
+                            viewModel.loadMoreSong()
+                        }
+                case .isLoading:
+                    ProgressView("Loading Songs...")
+                        .progressViewStyle(.circular)
+                        .frame(maxWidth: .infinity)
+                case .loadedAll:
+                    EmptyView()
+            case .noResults:
+                Text("Sorry Could not find anything.")
+                    .foregroundColor(.gray)
+                case .error(let error):
+                    Text("\(error)")
+            }
+            
         }
         .listStyle(.plain)
     }
