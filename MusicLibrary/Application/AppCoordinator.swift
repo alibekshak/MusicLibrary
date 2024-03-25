@@ -23,8 +23,8 @@ class AppCoordinator {
     }
     
     private func albumScreen() -> UIViewController {
-        let viewModel = AlbumViewModel(service: APIService())
-        let controller = UIHostingController(rootView: AlbumView(viewModel: viewModel))
+        let viewModel = MainViewModel(service: APIService())
+        let controller = UIHostingController(rootView: MainView(viewModel: viewModel))
         
         viewModel.onEvent = { [weak controller, weak self] event in
             guard let self else { return }

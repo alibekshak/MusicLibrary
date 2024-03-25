@@ -1,5 +1,5 @@
 //
-//  AlbumViewModel.swift
+//  MainView.swift
 //  MusicLibrary
 //
 //  Created by Alibek Shakirov on 19.03.2024.
@@ -10,7 +10,7 @@ import Combine
 
 // https://itunes.apple.com/search?term=jack+johnson&entity=album&limit=5&offset=10
 
-class AlbumViewModel: ObservableObject {
+class MainViewModel: ObservableObject {
     
     enum Event {
         case song(Int)
@@ -32,6 +32,7 @@ class AlbumViewModel: ObservableObject {
     init(service: APIService) {
         self.service = service
         $searchItem
+            .removeDuplicates()
             .dropFirst()
             .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
             .sink { [weak self] item in

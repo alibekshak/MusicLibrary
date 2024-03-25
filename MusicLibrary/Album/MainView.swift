@@ -1,5 +1,5 @@
 //
-//  AlbumView.swift
+//  MainView.swift
 //  MusicLibrary
 //
 //  Created by Alibek Shakirov on 19.03.2024.
@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct AlbumView: View {
+struct MainView: View {
     
-    @StateObject var viewModel: AlbumViewModel
+    @StateObject var viewModel: MainViewModel
     
     @State private var selectedEntityType = EntityType.album
     
