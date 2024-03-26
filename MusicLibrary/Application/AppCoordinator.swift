@@ -42,16 +42,27 @@ class AppCoordinator {
     private func albumSongsScreen(albumID: Int) -> UIViewController {
         let viewModel = SongForAlbumViewModel(albumID: albumID, service: APIService())
         
-        let albumSongViewController = UIHostingController(rootView: SongsInAlbumView(songsViewModel: viewModel))
+        let albumSongController = UIHostingController(rootView: SongsInAlbumView(songsViewModel: viewModel))
         
-        viewModel.onEvent = { [weak self, weak albumSongViewController] event in
+        viewModel.onEvent = { [weak self, weak albumSongController] event in
             guard let self = self else { return }
             switch event {
             case .dismiss:
-                albumSongViewController?.dismiss(animated: true)
+                albumSongController?.dismiss(animated: true)
+            case let .playAudio(song):
+                albumSongController?.present(playAudioScreen(song: song), animated: true)
             }
         }
-        albumSongViewController.modalPresentationStyle = .fullScreen
-        return albumSongViewController
+        albumSongController.modalPresentationStyle = .fullScreen
+        return albumSongController
+    }
+    
+    private func playAudioScreen(song: Song) -> UIViewController {
+        let viewModel = PlayAudioViewModel(song: song)
+        
+        let playAudioController = UIHostingController(rootView: PlayAudioView(viewModel: viewModel))
+        
+        playAudioController.modalPresentationStyle = .fullScreen
+        return playAudioController
     }
 }

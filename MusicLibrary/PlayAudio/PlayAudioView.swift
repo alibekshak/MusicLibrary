@@ -10,7 +10,7 @@ import AVKit
 
 struct PlayAudioView: View {
     
-    var audioName = "louis"
+    @StateObject var viewModel: PlayAudioViewModel
     
     @State private var player: AVAudioPlayer?
     
@@ -18,8 +18,6 @@ struct PlayAudioView: View {
     @State private var totalTime: TimeInterval = 0.0
     @State private var currentTime: TimeInterval = 0.0
     
-    @Binding var expandSheet: Bool
-    var animation: Namespace.ID
     @State private var animationContent: Bool = false
     
     var body: some View {
@@ -32,18 +30,14 @@ struct PlayAudioView: View {
                     .fill(.ultraThinMaterial)
                     .overlay {
                         Rectangle()
-                            Image("louis")
+                            .fill(.gray)
                             .blur(radius: 55)
-//                            .opacity(animationContent ? 1 : 0)
                     }
-                    .matchedGeometryEffect(id: "BGVIEN", in: animation)
                 
                 VStack(spacing: 15) {
                     GeometryReader {
                         let size = $0.size
-                        Image("louis")
-                            .resizable()
-                            .aspectRatio(contentMode: /*@START_MENU_TOKEN@*/.fill/*@END_MENU_TOKEN@*/)
+                        AsyncImage(url: URL(string: viewModel.song.artworkUrl100))
                             .frame(width: size.width, height: size.height)
                             .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
                     }
@@ -70,14 +64,27 @@ struct PlayAudioView: View {
     }
     
     private func setupAudio() {
-        guard let url = Bundle.main.url(forResource: audioName, withExtension: "mp3") else { return }
-        do {
-            player = try AVAudioPlayer(contentsOf: url)
-            player?.prepareToPlay()
-            totalTime = player?.duration ?? 0.0
-        } catch {
-            print("Error audio: \(error)")
+        guard let url = URL(string: viewModel.song.previewURL) else {
+            print("Invalid URL")
+            return
         }
+        
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print("Error loading: \(error)")
+                return
+            }
+            
+            guard let data = data else { return }
+            
+            do {
+                self.player = try AVAudioPlayer(data: data)
+                self.player?.prepareToPlay()
+                self.totalTime = self.player?.duration ?? 0.0
+            } catch {
+                print("Error audio player: \(error)")
+            }
+        }.resume()
     }
     
     private func playAudio() {
@@ -115,27 +122,14 @@ struct PlayAudioView: View {
                 VStack(spacing: spacing) {
                     HStack(alignment: .center, spacing: 15) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Name Song")
+                            Text(viewModel.song.trackName)
                                 .font(.title3)
                                 .fontWeight(.semibold)
                             
-                            Text("Name Author")
+                            Text(viewModel.song.artistName)
                                 .font(.callout)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        Button {
-                            
-                        } label: {
-                            Image(systemName: "ellipsis")
-                                .foregroundColor(.white)
-                                .padding(12)
-                                .background {
-                                    Circle()
-                                        .fill(.ultraThinMaterial)
-                                        .environment(\.colorScheme, .light)
-                                }
-                        }
                     }
                     
                     Slider(value: Binding(get: {
@@ -162,13 +156,10 @@ struct PlayAudioView: View {
                     }
                     
                     Button {
-                        
+                        isPlaying ? stopAudio() : playAudio()
                     } label: {
                         Image(systemName: isPlaying ? "pause.fill" : "play.fill")
                             .font(size.height < 300 ? .largeTitle : .system(size: 50))
-                            .onTapGesture {
-                                isPlaying ? stopAudio() : playAudio()
-                            }
                     }
                     
                     Button {
@@ -185,13 +176,8 @@ struct PlayAudioView: View {
     }
 }
 
-#Preview {
-    PlayAudioView(expandSheet: .constant(true), animation: Namespace().wrappedValue)
-}
-
 extension View {
     var deviceCornerRadius: CGFloat {
-        
         let key = "_displayCornerRadius"
         
         if let screen = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.screen {

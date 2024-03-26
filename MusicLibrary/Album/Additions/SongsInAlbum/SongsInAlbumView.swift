@@ -88,6 +88,9 @@ struct SongsInAlbumView: View {
                     }
                     .padding(.trailing)
                     .id(song.trackNumber)
+                    .onTapGesture {
+                        songsViewModel.onEvent?(.playAudio(song))
+                    }
                     Divider()
                 }
             }

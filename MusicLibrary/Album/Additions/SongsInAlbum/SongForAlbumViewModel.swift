@@ -10,6 +10,7 @@ import Foundation
 class SongForAlbumViewModel: ObservableObject{
     enum Event {
         case dismiss
+        case playAudio(Song)
     }
     var onEvent: ((Event) -> Void)?
     
