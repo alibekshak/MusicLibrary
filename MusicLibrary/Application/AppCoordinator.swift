@@ -62,6 +62,13 @@ class AppCoordinator {
         
         let playAudioController = UIHostingController(rootView: PlayAudioView(viewModel: viewModel))
         
+        viewModel.onEvent = { [weak self, weak playAudioController] event in
+            guard let self = self else { return }
+            switch event {
+            case .dismiss:
+                playAudioController?.dismiss(animated: true)
+            }
+        }
         playAudioController.modalPresentationStyle = .fullScreen
         return playAudioController
     }

@@ -12,10 +12,8 @@ struct PlayAudioView: View {
     
     @StateObject var viewModel: PlayAudioViewModel
     
-    @State private var player: AVAudioPlayer?
-    
     @State private var isPlaying = false
-    @State private var totalTime: TimeInterval = 0.0
+    
     @State private var currentTime: TimeInterval = 0.0
     
     @State private var animationContent: Bool = false
@@ -26,6 +24,7 @@ struct PlayAudioView: View {
             let safeArea = $0.safeAreaInsets
             
             ZStack {
+                
                 Rectangle()
                     .fill(.ultraThinMaterial)
                     .overlay {
@@ -35,6 +34,7 @@ struct PlayAudioView: View {
                     }
                 
                 VStack(spacing: 15) {
+                    navigationBar
                     GeometryReader {
                         let size = $0.size
                         AsyncImage(url: URL(string: viewModel.song.artworkUrl100))
@@ -54,56 +54,59 @@ struct PlayAudioView: View {
                 .clipped()
             }
             .ignoresSafeArea(.container, edges: .all)
+            .navigationBarItems(leading: Button {
+                
+            } label: {
+                Image(systemName: "")
+            })
         }
         .onAppear(perform: {
-            setupAudio()
+            viewModel.setupAudio()
         })
         .onReceive(Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()) { _ in
             updateProgress()
         }
     }
-    
-    private func setupAudio() {
-        guard let url = URL(string: viewModel.song.previewURL) else {
-            print("Invalid URL")
-            return
+    var navigationBar: some View {
+        HStack(alignment: .center, spacing: .none) {
+            Button {
+                viewModel.onEvent?(.dismiss)
+            } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: "chevron.left")
+                    Text("Back")
+                }
+                .font(.system(
+                    size: 18,
+                    weight: .medium,
+                    design: .rounded
+                    )
+                )
+                .foregroundColor(Color(.label))
+            }
+            Spacer()
         }
-        
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
-                print("Error loading: \(error)")
-                return
-            }
-            
-            guard let data = data else { return }
-            
-            do {
-                self.player = try AVAudioPlayer(data: data)
-                self.player?.prepareToPlay()
-                self.totalTime = self.player?.duration ?? 0.0
-            } catch {
-                print("Error audio player: \(error)")
-            }
-        }.resume()
+        .padding(.top, 12)
+        .padding(.bottom, 8)
     }
     
     private func playAudio() {
-        player?.play()
+        viewModel.player?.play()
         isPlaying = true
     }
     
     private func stopAudio() {
-        player?.pause()
+        viewModel.player?.pause()
         isPlaying = false
     }
     
     private func updateProgress() {
-        guard let player = player else { return }
+        guard let player = viewModel.player else { return }
         currentTime = player.currentTime
     }
     
     private func seekAudio(to time: TimeInterval) {
-        player?.currentTime = time
+        viewModel.player?.currentTime = time
     }
     
     private func timeString(time: TimeInterval) -> String {
@@ -136,13 +139,13 @@ struct PlayAudioView: View {
                         currentTime
                     }, set: { newValue in
                         seekAudio(to: newValue)
-                    }), in: 0...totalTime)
+                    }), in: 0...viewModel.totalTime)
                     .accentColor(.white)
                     
                     HStack {
                         Text(timeString(time: currentTime))
                         Spacer()
-                        Text(timeString(time: totalTime))
+                        Text(timeString(time: viewModel.totalTime))
                     }
                 }
                 .frame(height: size.height / 2.5, alignment: .top)
