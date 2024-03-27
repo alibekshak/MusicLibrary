@@ -13,9 +13,7 @@ struct PlayAudioView: View {
     @StateObject var viewModel: PlayAudioViewModel
     
     @State private var isPlaying = false
-    
     @State private var currentTime: TimeInterval = 0.0
-    
     @State private var animationContent: Bool = false
     
     var body: some View {
@@ -37,7 +35,13 @@ struct PlayAudioView: View {
                     navigationBar
                     GeometryReader {
                         let size = $0.size
-                        AsyncImage(url: URL(string: viewModel.song.artworkUrl100))
+                        AsyncImage(url: URL(string: viewModel.song.artworkUrl100)) { image in
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        } placeholder: {
+                            ProgressView()
+                        }
                             .frame(width: size.width, height: size.height)
                             .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
                     }
@@ -54,11 +58,6 @@ struct PlayAudioView: View {
                 .clipped()
             }
             .ignoresSafeArea(.container, edges: .all)
-            .navigationBarItems(leading: Button {
-                
-            } label: {
-                Image(systemName: "")
-            })
         }
         .onAppear(perform: {
             viewModel.setupAudio()
@@ -86,7 +85,7 @@ struct PlayAudioView: View {
             }
             Spacer()
         }
-        .padding(.top, 12)
+        .padding(.top, 16)
         .padding(.bottom, 8)
     }
     
@@ -150,30 +149,30 @@ struct PlayAudioView: View {
                 }
                 .frame(height: size.height / 2.5, alignment: .top)
                 
-                HStack(spacing: size.width * 0.18) {
+                HStack(spacing: size.width * 0.2) {
                     Button {
                         
                     } label: {
-                        Image(systemName: "backward.fill")
-                            .font(size.height < 300 ? .title3 : .title)
+                        Image(systemName: "backward.circle.fill")
+                            .font(size.height < 300 ? .system(size: 45) : .system(size: 30))
                     }
                     
                     Button {
                         isPlaying ? stopAudio() : playAudio()
                     } label: {
-                        Image(systemName: isPlaying ? "pause.fill" : "play.fill")
-                            .font(size.height < 300 ? .largeTitle : .system(size: 50))
+                        Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                            .font(size.height < 300 ? .system(size: 65) : .system(size: 50))
                     }
                     
                     Button {
                         
                     } label: {
-                        Image(systemName: "forward.fill")
-                            .font(size.height < 300 ? .title3 : .title)
+                        Image(systemName: "forward.circle.fill")
+                            .font(size.height < 300 ? .system(size: 45) : .system(size: 30))
                     }
                 }
+                .padding(.top, 24)
                 .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
             }
         }
     }
