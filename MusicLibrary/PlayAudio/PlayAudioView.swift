@@ -104,10 +104,17 @@ struct PlayAudioView: View {
     private func updateProgress() {
         guard let player = viewModel.player else { return }
         currentTime = player.currentTime
+        let epsilon: TimeInterval = 0.1 
+        if player.currentTime + epsilon >= viewModel.totalTime {
+            isPlaying = false
+        }
     }
     
     private func seekAudio(to time: TimeInterval) {
         viewModel.player?.currentTime = time
+        if time >= viewModel.totalTime {
+            isPlaying = false
+        }
     }
     
     private func timeString(time: TimeInterval) -> String {
@@ -115,6 +122,19 @@ struct PlayAudioView: View {
         let seconds = Int(time) % 60
         return String(format: "%02d:%02d", minute, seconds)
     }
+    
+    private func seekAudioBy(seconds: TimeInterval) {
+        let newTime = currentTime + seconds
+        if newTime < 0 {
+            seekAudio(to: 0)
+        } else if newTime > viewModel.totalTime {
+            seekAudio(to: viewModel.totalTime)
+        } else {
+            seekAudio(to: newTime)
+        }
+    }
+    
+    
     
     @ViewBuilder
     func PlayerView(_ mainSize: CGSize) -> some View {
@@ -143,6 +163,7 @@ struct PlayAudioView: View {
                     }), in: 0...viewModel.totalTime)
                     .accentColor(.white)
                     
+                    
                     HStack {
                         Text(timeString(time: currentTime))
                         Spacer()
@@ -153,7 +174,7 @@ struct PlayAudioView: View {
                 
                 HStack(spacing: size.width * 0.2) {
                     Button {
-                        
+                        seekAudioBy(seconds: -10)
                     } label: {
                         Image(systemName: "gobackward.10")
                             .font(size.height < 300 ? .system(size: 25) : .system(size: 15))
@@ -167,7 +188,7 @@ struct PlayAudioView: View {
                     }
                     
                     Button {
-                        
+                        seekAudioBy(seconds: 10)
                     } label: {
                         Image(systemName: "goforward.10")
                             .font(size.height < 300 ? .system(size: 25) : .system(size: 15))
