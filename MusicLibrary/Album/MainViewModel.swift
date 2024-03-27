@@ -38,6 +38,7 @@ class MainViewModel: ObservableObject {
             .sink { [weak self] item in
                 self?.state = .good
                 self?.albums = []
+                self?.page = 0
                 self?.fetchAlbums(for: item)
             }.store(in: &bag)
         
@@ -86,10 +87,9 @@ class MainViewModel: ObservableObject {
     }
     
     func fetchAlbums(for search: String) {
+        guard !search.isEmpty else { return }
         
-        guard !searchItem.isEmpty else { return }
-        
-        guard state == FetchState.good else { return }
+        guard state == .good else { return }
         
         state = .isLoading
         
@@ -99,9 +99,9 @@ class MainViewModel: ObservableObject {
                 case .success(let result):
                     for album in result.results {
                         self?.albums.append(album)
+                        self?.page += 1
+                        self?.state = (result.results.count == self?.limit) ? .good : .loadedAll
                     }
-                    self?.page += 1
-                    self?.state = (result.results.count == self?.limit) ? .good : .loadedAll
                 case .failure(let error):
                     self?.state = .error("Couldn't load: \(error.localizedDescription)")
                 }
