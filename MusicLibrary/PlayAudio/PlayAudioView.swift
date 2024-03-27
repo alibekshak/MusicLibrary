@@ -155,22 +155,22 @@ struct PlayAudioView: View {
                     Button {
                         
                     } label: {
-                        Image(systemName: "backward.circle.fill")
-                            .font(size.height < 300 ? .system(size: 45) : .system(size: 30))
+                        Image(systemName: "gobackward.10")
+                            .font(size.height < 300 ? .system(size: 25) : .system(size: 15))
                     }
                     
                     Button {
                         isPlaying ? stopAudio() : playAudio()
                     } label: {
                         Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                            .font(size.height < 300 ? .system(size: 65) : .system(size: 50))
+                            .font(size.height < 300 ? .system(size: 60) : .system(size: 30))
                     }
                     
                     Button {
                         
                     } label: {
-                        Image(systemName: "forward.circle.fill")
-                            .font(size.height < 300 ? .system(size: 45) : .system(size: 30))
+                        Image(systemName: "goforward.10")
+                            .font(size.height < 300 ? .system(size: 25) : .system(size: 15))
                     }
                 }
                 .padding(.top, 24)
