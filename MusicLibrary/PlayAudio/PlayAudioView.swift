@@ -22,7 +22,6 @@ struct PlayAudioView: View {
             let safeArea = $0.safeAreaInsets
             
             ZStack {
-                
                 Rectangle()
                     .fill(.ultraThinMaterial)
                     .overlay {
@@ -30,30 +29,17 @@ struct PlayAudioView: View {
                             .fill(.gray)
                             .blur(radius: 55)
                     }
-                
                 VStack(spacing: 15) {
                     navigationBar
-                    GeometryReader {
-                        let size = $0.size
-                        AsyncImage(url: URL(string: viewModel.song.artworkUrl100)) { image in
-                            image
-                                .resizable()
-                                .scaledToFill()
-                        } placeholder: {
-                            ProgressView()
-                        }
-                            .frame(width: size.width, height: size.height)
-                            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-                    }
+                    imageView
                     .frame(height: size.width - 50)
                     .padding(.vertical, size.height < 700 ? 10 : 30)
                     
                     PlayerView(size)
-                    
                 }
                 .padding(.top, safeArea.top + (safeArea.bottom == 0 ? 10 : 0))
                 .padding(.bottom, safeArea.bottom == 0 ? 10 : safeArea.bottom)
-                .padding(.horizontal, 25)
+                .padding(.horizontal, 24)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 .clipped()
             }
@@ -66,6 +52,22 @@ struct PlayAudioView: View {
             updateProgress()
         }
     }
+    
+    var imageView: some View {
+        GeometryReader {
+            let size = $0.size
+            AsyncImage(url: URL(string: viewModel.song.artworkUrl100)) { image in
+                image
+                    .resizable()
+                    .scaledToFill()
+            } placeholder: {
+                ProgressView()
+            }
+                .frame(width: size.width, height: size.height)
+                .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+        }
+    }
+    
     var navigationBar: some View {
         HStack(alignment: .center, spacing: .none) {
             Button {
@@ -175,19 +177,5 @@ struct PlayAudioView: View {
                 .foregroundColor(.white)
             }
         }
-    }
-}
-
-extension View {
-    var deviceCornerRadius: CGFloat {
-        let key = "_displayCornerRadius"
-        
-        if let screen = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.screen {
-            if let cornerRadious = screen.value(forKey: key) as? CGFloat {
-                return cornerRadious
-            }
-            return 0
-        }
-        return 0
     }
 }
