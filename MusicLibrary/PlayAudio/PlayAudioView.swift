@@ -14,7 +14,6 @@ struct PlayAudioView: View {
     
     @State private var isPlaying = false
     @State private var currentTime: TimeInterval = 0.0
-    @State private var animationContent: Bool = false
     
     var body: some View {
         GeometryReader {
@@ -104,7 +103,7 @@ struct PlayAudioView: View {
     private func updateProgress() {
         guard let player = viewModel.player else { return }
         currentTime = player.currentTime
-        let epsilon: TimeInterval = 0.1 
+        let epsilon: TimeInterval = 0.1
         if player.currentTime + epsilon >= viewModel.totalTime {
             isPlaying = false
         }

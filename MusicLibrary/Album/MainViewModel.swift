@@ -14,6 +14,7 @@ class MainViewModel: ObservableObject {
     
     enum Event {
         case song(Int)
+        case playAudio(Song)
     }
     var onEvent: ((Event) -> Void)?
     

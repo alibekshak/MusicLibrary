@@ -31,6 +31,8 @@ class AppCoordinator {
             switch event {
             case let .song(albumID):
                 controller?.present(albumSongsScreen(albumID: albumID), animated: true)
+            case let .playAudio(song):
+                controller?.present(playAudioScreen(song: song), animated: true)
             }
         }
         
