@@ -14,21 +14,21 @@ class SongForAlbumViewModel: ObservableObject{
     }
     var onEvent: ((Event) -> Void)?
     
-    let albumID: Int
+    @Published var album: Album
     @Published  var songs = [Song]()
     @Published var state: FetchState = .good
     
     let service:  APIService
     
-    init(albumID: Int, service: APIService) {
-        self.albumID = albumID
+    init(album: Album, service: APIService) {
+        self.album = album
         self.service = service
-        print("init for songs in album \(albumID)")
+        print("init album \(album)")
         self.fetch()
     }
     
     func fetch() {
-        fetchSongs(for: albumID)
+        fetchSongs(for: album.id)
     }
     
     private func fetchSongs(for albumID: Int) {

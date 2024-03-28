@@ -57,7 +57,7 @@ struct MainView: View {
                     }
                 }
                 .onTapGesture {
-                    viewModel.showAlbumSongs(songID: album.id)
+                    viewModel.showAlbumSongs(album: album)
                 }
             }
             

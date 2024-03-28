@@ -13,7 +13,7 @@ import Combine
 class MainViewModel: ObservableObject {
     
     enum Event {
-        case song(Int)
+        case albumForSongs(Album)
         case playAudio(Song)
     }
     var onEvent: ((Event) -> Void)?
@@ -110,7 +110,7 @@ class MainViewModel: ObservableObject {
         }
     }
     
-    func showAlbumSongs(songID: Int) {
-        onEvent?(.song(songID))
+    func showAlbumSongs(album: Album) {
+        onEvent?(.albumForSongs(album))
     }
 }

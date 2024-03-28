@@ -29,8 +29,8 @@ class AppCoordinator {
         viewModel.onEvent = { [weak controller, weak self] event in
             guard let self else { return }
             switch event {
-            case let .song(albumID):
-                controller?.present(albumSongsScreen(albumID: albumID), animated: true)
+            case let .albumForSongs(album):
+                controller?.present(albumSongsScreen(album: album), animated: true)
             case let .playAudio(song):
                 controller?.present(playAudioScreen(song: song), animated: true)
             }
@@ -41,8 +41,8 @@ class AppCoordinator {
         return nc
     }
     
-    private func albumSongsScreen(albumID: Int) -> UIViewController {
-        let viewModel = SongForAlbumViewModel(albumID: albumID, service: APIService())
+    private func albumSongsScreen(album: Album) -> UIViewController {
+        let viewModel = SongForAlbumViewModel(album: album, service: APIService())
         
         let albumSongController = UIHostingController(rootView: SongsInAlbumView(songsViewModel: viewModel))
         
