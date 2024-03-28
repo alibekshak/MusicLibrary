@@ -9,28 +9,52 @@ import SwiftUI
 
 struct SongsInAlbumView: View {
     
-    @StateObject var songsViewModel: SongForAlbumViewModel
+    @StateObject var viewModel: SongForAlbumViewModel
     
     var body: some View {
         Group {
-            if songsViewModel.state == .isLoading || songsViewModel.songs.isEmpty {
+            if viewModel.state == .isLoading || viewModel.songs.isEmpty {
                 Spacer()
-                ProgressView()
+                ProgressView("Loading songs")
                     .progressViewStyle(.circular)
                 Spacer()
             } else {
                 VStack {
                     navigationBar
+                    albumForSongs
                     songs
                 }
             }
         }
     }
     
+    var albumForSongs: some View {
+        HStack(alignment: .center) {
+            ImageLoadingView(urlString: viewModel.album.artworkUrl100, size: 100)
+            VStack(alignment: .leading) {
+                Text(viewModel.album.collectionName)
+                    .font(.body)
+                    .foregroundColor(Color(.label))
+                    .bold()
+                
+                Text(viewModel.album.artistName)
+                    .padding(.bottom, 4)
+                
+                Text(viewModel.album.primaryGenreName)
+                Text(viewModel.album.country)
+            }
+            .font(.subheadline)
+            .foregroundColor(.gray)
+            .lineLimit(1)
+            Spacer()
+        }
+        .padding()
+    }
+    
     var navigationBar: some View {
         HStack(alignment: .center, spacing: .none) {
             Button {
-                songsViewModel.onEvent?(.dismiss)
+                viewModel.onEvent?(.dismiss)
             } label: {
                 HStack(spacing: 6) {
                     Image(systemName: "chevron.left")
@@ -65,17 +89,14 @@ struct SongsInAlbumView: View {
     var songs: some View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 10) {
-                ForEach(songsViewModel.songs) { song in
+                ForEach(viewModel.songs) { song in
                     HStack(spacing: 12) {
                         Text("\(song.trackNumber)")
                             .font(.footnote)
                             .frame(width: 25, alignment: .trailing)
                             .foregroundColor(.black)
                         ImageLoadingView(urlString: song.artworkUrl60, size: 60)
-                        VStack(alignment: .leading){
-                            Text("\(song.country)")
-                                .font(.footnote)
-                                .foregroundColor(.black)
+                        VStack(alignment: .leading, spacing: 4){
                             Text(song.trackName)
                                 .font(.headline)
                                 .truncationMode(.tail)
@@ -89,7 +110,7 @@ struct SongsInAlbumView: View {
                     .padding(.trailing)
                     .id(song.trackNumber)
                     .onTapGesture {
-                        songsViewModel.onEvent?(.playAudio(song))
+                        viewModel.onEvent?(.playAudio(song))
                     }
                     Divider()
                 }

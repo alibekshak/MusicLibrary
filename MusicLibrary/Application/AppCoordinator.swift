@@ -44,7 +44,7 @@ class AppCoordinator {
     private func albumSongsScreen(album: Album) -> UIViewController {
         let viewModel = SongForAlbumViewModel(album: album, service: APIService())
         
-        let albumSongController = UIHostingController(rootView: SongsInAlbumView(songsViewModel: viewModel))
+        let albumSongController = UIHostingController(rootView: SongsInAlbumView(viewModel: viewModel))
         
         viewModel.onEvent = { [weak self, weak albumSongController] event in
             guard let self = self else { return }
