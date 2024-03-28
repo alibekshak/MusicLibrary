@@ -60,7 +60,6 @@ struct MainView: View {
                     viewModel.showAlbumSongs(album: album)
                 }
             }
-            
             switch viewModel.state {
             case .good:
                 Color.clear
@@ -71,7 +70,6 @@ struct MainView: View {
                 ProgressView("Loading Albums...")
                     .progressViewStyle(.circular)
                     .frame(maxWidth: .infinity)
-                
             case .loadedAll:
                 EmptyView()
             case .noResults:

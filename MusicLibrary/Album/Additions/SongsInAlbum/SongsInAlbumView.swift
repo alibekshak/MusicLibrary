@@ -33,7 +33,7 @@ struct SongsInAlbumView: View {
             ImageLoadingView(urlString: viewModel.album.artworkUrl100, size: 100)
             VStack(alignment: .leading) {
                 Text(viewModel.album.collectionName)
-                    .font(.body)
+                    .font(.headline)
                     .foregroundColor(Color(.label))
                     .bold()
                 
@@ -45,10 +45,13 @@ struct SongsInAlbumView: View {
             }
             .font(.subheadline)
             .foregroundColor(.gray)
-            .lineLimit(1)
             Spacer()
         }
         .padding()
+        .background(
+            Color(.systemBackground)
+                .shadow(color: Color.black.opacity(0.3), radius: 3, x: 0, y: 5)
+        )
     }
     
     var navigationBar: some View {
@@ -104,8 +107,8 @@ struct SongsInAlbumView: View {
                             Text(song.artistName)
                                 .font(.caption)
                                 .foregroundColor(.gray)
+                                .lineLimit(1)
                         }
-                        .lineLimit(1)
                         Spacer()
                         Text(formateDuration(time: song.trackTimeMillis))
                     }
@@ -117,7 +120,7 @@ struct SongsInAlbumView: View {
                     Divider()
                 }
             }
-            
+            .padding(.top)
         }
     }
     

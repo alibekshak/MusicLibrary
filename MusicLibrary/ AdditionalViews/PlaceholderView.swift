@@ -18,10 +18,8 @@ struct PlaceholderView: View {
         Artists(image: "ac-dc", name: "AC/DC", term: "Artist"),
         Artists(image: "ledZeppelin", name: "Led Zeppelin", term: "Artist"),
         Artists(image: "adele", name: "Adele", term: "Artist"),
-        Artists(image: "beatles", name: "Beatles", term: "Artist"),
         Artists(image: "queen", name: "Queen", term: "Artist"),
         Artists(image: "ray", name: "Ray Charles", term: "Artist"),
-        Artists(image: "louis", name: "Louis Armstrong", term: "Artist")
     ]
     
     var body: some View {
