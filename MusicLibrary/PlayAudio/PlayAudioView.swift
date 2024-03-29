@@ -25,7 +25,7 @@ struct PlayAudioView: View {
                     .fill(.ultraThinMaterial)
                     .overlay {
                         Rectangle()
-                            .fill(.gray)
+                            .fill(.gray.opacity(0.8))
                             .blur(radius: 55)
                     }
                 VStack(spacing: 15) {
@@ -80,7 +80,7 @@ struct PlayAudioView: View {
                     size: 18,
                     weight: .medium,
                     design: .rounded
-                    )
+                )
                 )
                 .foregroundColor(Color(.label))
             }
@@ -153,13 +153,12 @@ struct PlayAudioView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     
-                    Slider(value: Binding(get: {
+                    MusicSliderView(value: Binding(get: {
                         currentTime
                     }, set: { newValue in
                         seekAudio(to: newValue)
-                    }), in: 0...viewModel.totalTime)
-                    .accentColor(.white)
-                    
+                    }), range: 0...viewModel.totalTime)
+                    .frame(height: 7)
                     
                     HStack {
                         Text(timeString(time: currentTime))

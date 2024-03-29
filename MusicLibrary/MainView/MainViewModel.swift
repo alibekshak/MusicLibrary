@@ -63,7 +63,7 @@ class MainViewModel: ObservableObject {
         fetchSong(for: searchItem)
     }
     
-    func fetchSong(for searchTerm: String){
+    func fetchSong(for searchTerm: String) {
         guard !searchTerm.isEmpty else { return }
         
         guard state == .good else { return }
