@@ -79,17 +79,9 @@
 			children = (
 				186EEE482BAC05DD007A6F5F /* PlaceholderView.swift */,
 				186EEE692BB6CA92007A6F5F /* SliderVolumeView.swift */,
-			);
-			path = " AdditionalViews";
-			sourceTree = "<group>";
-		};
-		186EEE522BAC93AE007A6F5F /* Additions */ = {
-			isa = PBXGroup;
-			children = (
-				186EEE592BAD2EC1007A6F5F /* SongsInAlbum */,
 				186EEE552BAC953A007A6F5F /* ImageLoadingView.swift */,
 			);
-			path = Additions;
+			path = " AdditionalViews";
 			sourceTree = "<group>";
 		};
 		186EEE592BAD2EC1007A6F5F /* SongsInAlbum */ = {
@@ -141,7 +133,8 @@
 				186EEE5F2BB169FB007A6F5F /* PlayAudio */,
 				186EEE452BABF67B007A6F5F /*  AdditionalViews */,
 				186EEE3D2BAAF721007A6F5F /* Service */,
-				18A906FC2BA9F83F00E6AE1B /* Album */,
+				186EEE592BAD2EC1007A6F5F /* SongsInAlbum */,
+				18A906FC2BA9F83F00E6AE1B /* MainView */,
 				18A906F12BA9E48B00E6AE1B /* Application */,
 				18A906EA2BA9E2C300E6AE1B /* model */,
 				18A906E02BA9DFA200E6AE1B /* Assets.xcassets */,
@@ -180,14 +173,13 @@
 			path = Application;
 			sourceTree = "<group>";
 		};
-		18A906FC2BA9F83F00E6AE1B /* Album */ = {
+		18A906FC2BA9F83F00E6AE1B /* MainView */ = {
 			isa = PBXGroup;
 			children = (
 				18A906F82BA9EB5B00E6AE1B /* MainView.swift */,
 				18A906FA2BA9EB7E00E6AE1B /* MainViewModel.swift */,
-				186EEE522BAC93AE007A6F5F /* Additions */,
 			);
-			path = Album;
+			path = MainView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
