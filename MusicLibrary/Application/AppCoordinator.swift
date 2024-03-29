@@ -23,7 +23,6 @@ class AppCoordinator {
         window.rootViewController = rootController
     }
     
-    
     private func launchScreen() -> UIViewController {
         let viewController = UIHostingController(rootView: LaunchScreen())
         
@@ -41,7 +40,6 @@ class AppCoordinator {
         return viewController
     }
 
-    
     private func albumScreen() -> UIViewController {
         let viewModel = MainViewModel(service: APIService())
         let controller = UIHostingController(rootView: MainView(viewModel: viewModel))
@@ -91,7 +89,10 @@ class AppCoordinator {
                 playAudioController?.dismiss(animated: true)
             }
         }
+        
+        playAudioController.modalTransitionStyle = .crossDissolve
         playAudioController.modalPresentationStyle = .fullScreen
+        
         return playAudioController
     }
 }

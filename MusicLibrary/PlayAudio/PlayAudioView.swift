@@ -38,7 +38,7 @@ struct PlayAudioView: View {
                 }
                 .padding(.top, safeArea.top + (safeArea.bottom == 0 ? 10 : 0))
                 .padding(.bottom, safeArea.bottom == 0 ? 10 : safeArea.bottom)
-                .padding(.horizontal, 24)
+                .padding(.horizontal, 18)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 .clipped()
             }
