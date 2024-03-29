@@ -31,8 +31,8 @@ struct PlayAudioView: View {
                 VStack(spacing: 15) {
                     navigationBar
                     imageView
-                    .frame(height: size.width - 50)
-                    .padding(.vertical, size.height < 700 ? 10 : 30)
+                        .frame(height: size.width - 50)
+                        .padding(.vertical, size.height < 700 ? 10 : 30)
                     
                     PlayerView(size)
                 }
@@ -62,8 +62,8 @@ struct PlayAudioView: View {
             } placeholder: {
                 ProgressView()
             }
-                .frame(width: size.width, height: size.height)
-                .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+            .frame(width: size.width, height: size.height)
+            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
         }
     }
     
@@ -133,8 +133,6 @@ struct PlayAudioView: View {
         }
     }
     
-    
-    
     @ViewBuilder
     func PlayerView(_ mainSize: CGSize) -> some View {
         GeometryReader {
@@ -194,6 +192,35 @@ struct PlayAudioView: View {
                     }
                 }
                 .padding(.top, 24)
+                .foregroundColor(.white)
+                
+                VStack(spacing: spacing) {
+                    HStack(spacing: 15) {
+                        Button {
+                            viewModel.decreaseVolume()
+                        } label: {
+                            Image(systemName: "speaker.fill")
+                        }
+                        
+                        Capsule()
+                            .fill(.ultraThinMaterial)
+                            .environment(\.colorScheme, .light)
+                            .frame(height: 5)
+                            .overlay(
+                                GeometryReader { geometry in
+                                    Capsule()
+                                        .fill(Color.white)
+                                        .frame(width: geometry.size.width * CGFloat(viewModel.volume), height: geometry.size.height)
+                                }
+                            )
+                        
+                        Button {
+                            viewModel.increaseVolume()
+                        } label: {
+                            Image(systemName: "speaker.wave.3.fill")
+                        }
+                    }
+                }
                 .foregroundColor(.white)
             }
         }

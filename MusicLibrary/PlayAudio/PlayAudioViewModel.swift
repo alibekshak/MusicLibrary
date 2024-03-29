@@ -17,6 +17,7 @@ class PlayAudioViewModel: ObservableObject {
     @Published var song: Song
     @Published var player: AVAudioPlayer?
     @Published var totalTime: TimeInterval = 0.0
+    @Published var volume: Float = 1
     
     init(song: Song) {
         self.song = song
@@ -47,5 +48,19 @@ class PlayAudioViewModel: ObservableObject {
                 }
             }
         }.resume()
+    }
+    
+    func increaseVolume() {
+        guard let player = player else { return }
+        let newVolume = min(player.volume + 0.1, 1.0)
+        player.volume = newVolume
+        volume = newVolume
+    }
+    
+    func decreaseVolume() {
+        guard let player = player else { return }
+        let newVolume = max(player.volume - 0.1, 0.0)
+        player.volume = newVolume
+        volume = newVolume
     }
 }
