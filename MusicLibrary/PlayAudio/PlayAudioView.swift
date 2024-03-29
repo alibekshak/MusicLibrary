@@ -63,7 +63,7 @@ struct PlayAudioView: View {
                 ProgressView()
             }
             .frame(width: size.width, height: size.height)
-            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
     }
     

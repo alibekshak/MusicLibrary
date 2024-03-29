@@ -23,7 +23,7 @@ struct PlaceholderView: View {
     ]
     
     var body: some View {
-        VStack(spacing: 15){
+        VStack(spacing: 15) {
             List {
                 ForEach(suggestion, id: \.self){ artist in
                     Button{
