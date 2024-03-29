@@ -17,7 +17,7 @@ class PlayAudioViewModel: ObservableObject {
     @Published var song: Song
     @Published var player: AVAudioPlayer?
     @Published var totalTime: TimeInterval = 0.0
-    @Published var volume: Float = 1
+    @Published var volume: Float = 0.5
     
     init(song: Song) {
         self.song = song
@@ -43,6 +43,7 @@ class PlayAudioViewModel: ObservableObject {
                     self.player = try AVAudioPlayer(data: data)
                     self.player?.prepareToPlay()
                     self.totalTime = self.player?.duration ?? 0.0
+                    self.player?.volume = self.volume
                 } catch {
                     print("Error audio player: \(error)")
                 }
@@ -53,14 +54,18 @@ class PlayAudioViewModel: ObservableObject {
     func increaseVolume() {
         guard let player = player else { return }
         let newVolume = min(player.volume + 0.1, 1.0)
-        player.volume = newVolume
-        volume = newVolume
+        adjustVolume(to: newVolume)
     }
     
     func decreaseVolume() {
         guard let player = player else { return }
         let newVolume = max(player.volume - 0.1, 0.0)
-        player.volume = newVolume
-        volume = newVolume
+        adjustVolume(to: newVolume)
+    }
+    
+    func adjustVolume(to value: Float) {
+        guard let player = player else { return }
+        player.volume = value
+        volume = value
     }
 }

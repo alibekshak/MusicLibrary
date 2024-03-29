@@ -191,7 +191,7 @@ struct PlayAudioView: View {
                             .font(size.height < 300 ? .system(size: 25) : .system(size: 15))
                     }
                 }
-                .padding(.top, 24)
+                .padding(.bottom)
                 .foregroundColor(.white)
                 
                 VStack(spacing: spacing) {
@@ -202,17 +202,16 @@ struct PlayAudioView: View {
                             Image(systemName: "speaker.fill")
                         }
                         
-                        Capsule()
-                            .fill(.ultraThinMaterial)
-                            .environment(\.colorScheme, .light)
-                            .frame(height: 5)
-                            .overlay(
-                                GeometryReader { geometry in
-                                    Capsule()
-                                        .fill(Color.white)
-                                        .frame(width: geometry.size.width * CGFloat(viewModel.volume), height: geometry.size.height)
-                                }
-                            )
+                        SliderVolumeView(percentage: Binding(
+                            get: {
+                                viewModel.volume
+                            },
+                            set: { newValue in
+                                viewModel.volume = newValue
+                                viewModel.adjustVolume(to: newValue)
+                            }
+                        ))
+                        .frame(height: 7)
                         
                         Button {
                             viewModel.increaseVolume()
