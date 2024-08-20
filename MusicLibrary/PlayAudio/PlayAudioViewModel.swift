@@ -18,6 +18,8 @@ class PlayAudioViewModel: ObservableObject {
     @Published var player: AVAudioPlayer?
     @Published var totalTime: TimeInterval = 0.0
     @Published var volume: Float = 0.5
+    @Published var currentTime: TimeInterval = 0.0
+    @Published var isPlaying: Bool = false
     
     init(song: Song) {
         self.song = song
@@ -66,5 +68,48 @@ class PlayAudioViewModel: ObservableObject {
         guard let player = player else { return }
         player.volume = value
         volume = value
+    }
+    
+    func playAudio() {
+        player?.play()
+        isPlaying = true
+    }
+    
+    func stopAudio() {
+        player?.pause()
+        isPlaying = false
+    }
+    
+    func updateProgress() {
+        guard let player = player else { return }
+        currentTime = player.currentTime
+        let epsilon: TimeInterval = 0.1
+        if player.currentTime + epsilon >= totalTime {
+            isPlaying = false
+        }
+    }
+    
+    func seekAudio(to time: TimeInterval) {
+        player?.currentTime = time
+        if time >= totalTime {
+            isPlaying = false
+        }
+    }
+    
+    func timeString(time: TimeInterval) -> String {
+        let minute = Int(time) / 60
+        let seconds = Int(time) % 60
+        return String(format: "%02d:%02d", minute, seconds)
+    }
+    
+    func seekAudioBy(seconds: TimeInterval) {
+        let newTime = currentTime + seconds
+        if newTime < 0 {
+            seekAudio(to: 0)
+        } else if newTime > totalTime {
+            seekAudio(to: totalTime)
+        } else {
+            seekAudio(to: newTime)
+        }
     }
 }

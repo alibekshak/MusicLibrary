@@ -29,6 +29,7 @@
 		18A906F52BA9E53000E6AE1B /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A906F42BA9E53000E6AE1B /* AppCoordinator.swift */; };
 		18A906F92BA9EB5B00E6AE1B /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A906F82BA9EB5B00E6AE1B /* MainView.swift */; };
 		18A906FB2BA9EB7E00E6AE1B /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A906FA2BA9EB7E00E6AE1B /* MainViewModel.swift */; };
+		18E736B72C74B84C00A82FBA /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E736B62C74B84C00A82FBA /* PlayerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +56,7 @@
 		18A906F42BA9E53000E6AE1B /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		18A906F82BA9EB5B00E6AE1B /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		18A906FA2BA9EB7E00E6AE1B /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		18E736B62C74B84C00A82FBA /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 		186EEE5F2BB169FB007A6F5F /* PlayAudio */ = {
 			isa = PBXGroup;
 			children = (
+				18E736B82C74BAE800A82FBA /* Auxiliary */,
 				186EEE602BB16A29007A6F5F /* PlayAudioView.swift */,
 				186EEE622BB28635007A6F5F /* PlayAudioViewModel.swift */,
 			);
@@ -185,6 +188,14 @@
 			path = MainView;
 			sourceTree = "<group>";
 		};
+		18E736B82C74BAE800A82FBA /* Auxiliary */ = {
+			isa = PBXGroup;
+			children = (
+				18E736B62C74B84C00A82FBA /* PlayerView.swift */,
+			);
+			path = Auxiliary;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -264,6 +275,7 @@
 				186EEE582BAC9A4D007A6F5F /* SongForAlbumViewModel.swift in Sources */,
 				186EEE512BAC817C007A6F5F /* Artists.swift in Sources */,
 				18A906F52BA9E53000E6AE1B /* AppCoordinator.swift in Sources */,
+				18E736B72C74B84C00A82FBA /* PlayerView.swift in Sources */,
 				18A906EE2BA9E35900E6AE1B /* AlbumResponse.swift in Sources */,
 				186EEE4B2BAC0BC4007A6F5F /* EntityType.swift in Sources */,
 				18A906F32BA9E4EB00E6AE1B /* AppDelegate.swift in Sources */,

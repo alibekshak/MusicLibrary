@@ -12,7 +12,7 @@ struct LaunchScreen: View {
     @State private var isAnimating = false
     
     var body: some View {
-        VStack {
+        VStack(spacing: 12) {
             Image("music")
                 .resizable()
                 .scaledToFit()
