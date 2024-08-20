@@ -14,10 +14,11 @@ struct SongsInAlbumView: View {
     var body: some View {
         Group {
             if viewModel.state == .isLoading || viewModel.songs.isEmpty {
-                Spacer()
-                ProgressView("Loading songs")
-                    .progressViewStyle(.circular)
-                Spacer()
+                VStack {
+                    ProgressView("Loading songs")
+                        .progressViewStyle(.circular)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 VStack {
                     navigationBar

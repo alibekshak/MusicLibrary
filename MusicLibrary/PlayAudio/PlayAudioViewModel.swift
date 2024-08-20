@@ -26,7 +26,6 @@ class PlayAudioViewModel: ObservableObject {
     
     func setupAudio() {
         guard let url = URL(string: song.previewURL) else {
-            print("Invalid URL")
             return
         }
         

@@ -41,7 +41,8 @@ class MainViewModel: ObservableObject {
                 self?.albums = []
                 self?.page = 0
                 self?.fetchAlbums(for: item)
-            }.store(in: &bag)
+            }
+            .store(in: &bag)
         
         $searchItem
             .removeDuplicates()
@@ -52,7 +53,8 @@ class MainViewModel: ObservableObject {
                 self?.songs = []
                 self?.page = 0
                 self?.fetchSong(for: term)
-            }.store(in: &bag)
+            }
+            .store(in: &bag)
     }
     
     func loadMoreAlbum() {
@@ -70,13 +72,12 @@ class MainViewModel: ObservableObject {
         
         state = .isLoading
         
-        service.fetchSong(searchItem: searchItem, page: page, limit: limit){ [weak self] result in
+        service.fetchSong(searchItem: searchItem, page: page, limit: limit) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let result):
                     for song in result.results{
                         self?.songs.append(song)
-                        
                         self?.page += 1
                         self?.state = (result.results.count == self?.limit) ? .good : .loadedAll
                     }
