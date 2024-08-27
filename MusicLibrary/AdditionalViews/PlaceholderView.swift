@@ -24,9 +24,11 @@ struct PlaceholderView: View {
     
     var body: some View {
         VStack(spacing: 15) {
+            Text("Examples:")
+                .font(.system(size: 22, weight: .semibold))
             List {
                 ForEach(suggestion, id: \.self){ artist in
-                    Button{
+                    Button {
                         searchTerm = artist.name
                     } label: {
                         HStack {
