@@ -8,38 +8,29 @@
 import SwiftUI
 import AVKit
 
+enum StatusView {
+    case idel
+    case loading
+}
+
 struct PlayAudioView: View {
     
     @StateObject var viewModel: PlayAudioViewModel
+    
+    @State var statusView: StatusView = .idel
     
     var body: some View {
         GeometryReader {
             let size = $0.size
             let safeArea = $0.safeAreaInsets
-            
-            ZStack {
-                Rectangle()
-                    .fill(.ultraThinMaterial)
-                    .overlay {
-                        Rectangle()
-                            .fill(.gray.opacity(0.8))
-                            .blur(radius: 55)
-                    }
-                VStack(spacing: 15) {
-                    navigationBar
-                    imageView
-                        .frame(height: size.width - 50)
-                        .padding(.vertical, size.height < 700 ? 10 : 30)
-                    
-                    PlayerView(viewModel: viewModel)
+            Group {
+                switch statusView {
+                case .idel:
+                    player(size: size, safeArea: safeArea)
+                case .loading:
+                    loadingView
                 }
-                .padding(.top, safeArea.top + (safeArea.bottom == 0 ? 10 : 0))
-                .padding(.bottom, safeArea.bottom == 0 ? 10 : safeArea.bottom)
-                .padding(.horizontal, 18)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                .clipped()
             }
-            .ignoresSafeArea(.container, edges: .all)
         }
         .onAppear {
             viewModel.setupAudio()
@@ -47,6 +38,47 @@ struct PlayAudioView: View {
         .onReceive(Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()) { _ in
             viewModel.updateProgress()
         }
+        .onChange(of: viewModel.loadingData) { newValue in
+            withAnimation {
+                statusView = newValue ? .loading : .idel
+            }
+        }
+    }
+    
+    var loadingView: some View {
+        VStack {
+            ProgressView()
+                .progressViewStyle(.circular)
+                .foregroundStyle(Color(uiColor: .label))
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.gray.opacity(0.8))
+    }
+    
+    func player(size: CGSize, safeArea: EdgeInsets) -> some View {
+        ZStack {
+            Rectangle()
+                .fill(.ultraThinMaterial)
+                .overlay {
+                    Rectangle()
+                        .fill(.gray.opacity(0.8))
+                        .blur(radius: 55)
+                }
+            VStack(spacing: 15) {
+                navigationBar
+                imageView
+                    .frame(height: size.width - 50)
+                    .padding(.vertical, size.height < 700 ? 10 : 30)
+                
+                PlayerView(viewModel: viewModel)
+            }
+            .padding(.top, safeArea.top + (safeArea.bottom == 0 ? 10 : 0))
+            .padding(.bottom, safeArea.bottom == 0 ? 10 : safeArea.bottom)
+            .padding(.horizontal, 18)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .clipped()
+        }
+        .ignoresSafeArea(.container, edges: .all)
     }
     
     var imageView: some View {

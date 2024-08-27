@@ -21,12 +21,18 @@ class PlayAudioViewModel: ObservableObject {
     @Published var currentTime: TimeInterval = 0.0
     @Published var isPlaying: Bool = false
     
+    @Published var loadingData: Bool = false
+    
     init(song: Song) {
         self.song = song
         print("init song: \(song)")
     }
     
     func setupAudio() {
+        DispatchQueue.main.async {
+            self.loadingData = true
+        }
+        
         guard let url = URL(string: song.previewURL) else {
             return
         }
@@ -45,11 +51,16 @@ class PlayAudioViewModel: ObservableObject {
                     self.player?.prepareToPlay()
                     self.totalTime = self.player?.duration ?? 0.0
                     self.player?.volume = self.volume
+                    
+                    DispatchQueue.main.async {
+                        self.loadingData = false
+                    }
                 } catch {
                     print("Error audio player: \(error)")
                 }
             }
-        }.resume()
+        }
+        .resume()
     }
     
     func increaseVolume() {
