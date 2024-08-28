@@ -9,6 +9,8 @@ import Foundation
 
 class APIService {
     
+    let baseURL: String = API.baseURP
+    
     func fetchAlbum(searchItem: String, page: Int, limit: Int, completion: @escaping (Result<AlbumResponse, APIError>) -> Void) {
         let url = creatURL(for: searchItem, type: .album, page: page, limit: limit)
         fetch(type: AlbumResponse.self, url: url, completion: completion)
@@ -49,7 +51,7 @@ class APIService {
     }
     
     func creatURL(for searchItem: String, type: EntityType, page: Int?, limit: Int?) -> URL? {
-        let baseURL = "https://itunes.apple.com/search"
+        let urlSearch = baseURL + "search"
         
         var queryItems = [URLQueryItem(name: "term", value: searchItem),
                          URLQueryItem(name: "entity", value: type.rawValue),
@@ -62,18 +64,18 @@ class APIService {
         }
 
         
-        var component = URLComponents(string: baseURL)
+        var component = URLComponents(string: urlSearch)
         component?.queryItems = queryItems
         return component?.url
     }
     
     func createURL(for id: Int,type: EntityType) -> URL? {
-        let baseURL = "https://itunes.apple.com/lookup"
+        let urlLookup = baseURL + "lookup"
         
         let queryItems = [URLQueryItem(name: "id", value: String(id)),
                           URLQueryItem(name: "entity", value: type.rawValue)]
         
-        var components = URLComponents(string: baseURL)
+        var components = URLComponents(string: urlLookup)
         components?.queryItems = queryItems
         return components?.url
     }
