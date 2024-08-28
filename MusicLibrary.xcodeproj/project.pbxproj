@@ -72,6 +72,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1856F5082C7F3AB700776C56 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				186EEE4A2BAC0BC4007A6F5F /* EntityType.swift */,
+				181CDDD72BA9FF2700E7BE4D /* FetchState.swift */,
+				186EEE3B2BAAD8DA007A6F5F /* APIError.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
 		186EEE3D2BAAF721007A6F5F /* Service */ = {
 			isa = PBXGroup;
 			children = (
@@ -146,6 +156,7 @@
 				18A906FC2BA9F83F00E6AE1B /* MainView */,
 				18A906F12BA9E48B00E6AE1B /* Application */,
 				18A906EA2BA9E2C300E6AE1B /* model */,
+				1856F5082C7F3AB700776C56 /* Sources */,
 				18A906E02BA9DFA200E6AE1B /* Assets.xcassets */,
 				18A906E22BA9DFA200E6AE1B /* Preview Content */,
 			);
@@ -163,11 +174,8 @@
 		18A906EA2BA9E2C300E6AE1B /* model */ = {
 			isa = PBXGroup;
 			children = (
-				186EEE4A2BAC0BC4007A6F5F /* EntityType.swift */,
-				181CDDD72BA9FF2700E7BE4D /* FetchState.swift */,
 				18A906EB2BA9E33000E6AE1B /* SongResponse.swift */,
 				18A906ED2BA9E35900E6AE1B /* AlbumResponse.swift */,
-				186EEE3B2BAAD8DA007A6F5F /* APIError.swift */,
 				186EEE502BAC817C007A6F5F /* Artists.swift */,
 			);
 			path = model;
